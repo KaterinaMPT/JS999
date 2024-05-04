@@ -1,18 +1,19 @@
 class Kitten {
-  constructor(name, age, color) {
+  constructor(image, name, age, color) {
+    this.image = image;
     this.name = name;
     this.age = age;
     this.color = color;
   }
 
   isValid() {
-    return this.age > 0 && this.name && this.color;
+    return this.age > 0 && this.name && this.color && this.image;
   }
 }
 
 const kittens = [
-  new Kitten("Мочалка", 2, "Светлый"),
-  new Kitten("Мухоморчик", 3, "Рыжий в крапинку")
+  new Kitten("https://i.postimg.cc/vHRbqFZv/1628685519-21-p-kotyata-foto-milashki-23.jpg", "Мочалка", 2, "Белый"),
+  new Kitten("https://i.postimg.cc/5NGvktFR/142110-kot-bakenbardy-koshki-malogo-i-srednego-razmera-trava-koshachih-1920x1080.jpg","Мухоморчик", 3, "Рыжий")
 ];
 
 function displayCollection(collection, containerId) {
@@ -25,6 +26,7 @@ function displayCollection(collection, containerId) {
 
     const info = `
       <div class="card">
+        <img src="${kitten.image}" class="card-img-top" alt="...">
         <div class="card-body">
           <h5 class="card-title">${kitten.name}</h5>
           <p class="card-text">Возраст: ${kitten.age}</p>
@@ -44,6 +46,8 @@ function addKitten(event) {
   event.preventDefault();
 
   const form = event.target;
+  const image = form.elements.image.files[0];
+  const imageUrl = URL.createObjectURL(image);
   const name = form.elements.name.value;
   const ageStr = form.elements.age.value.trim();
   const color = form.elements.color.value;
@@ -57,17 +61,19 @@ function addKitten(event) {
   else if (!color) {
     displayErrorMessage("Пожалуйста, введите цвет котенка.");
   } 
+  else if (!image) {
+    displayErrorMessage("Пожалуйста, выберите изображение котенка.");
+  } 
   else {
     const age = parseInt(ageStr);
     if (isNaN(age) || age <= 0) {
       displayErrorMessage("Пожалуйста, введите корректный возраст (больше нуля).");
     } 
     else {
-      const newKitten = new Kitten(name, age, color);
+      const newKitten = new Kitten(imageUrl, name, age, color);
       kittens.push(newKitten);
       form.reset(); 
       displayCollection(kittens, "collection");
-      
       clearErrorMessage();
     }
   }
@@ -92,21 +98,27 @@ function saveRedact(event) {
   const newName = form.elements.redactName.value;
   const newAge = parseInt(form.elements.redactAge.value);
   const newColor = form.elements.redactColor.value;
+  const newImage = form.elements.redactImage.files[0];
 
   const age = parseInt(newAge);
-    if (isNaN(age) || age <= 0) {
-      displayErrorMessage("Пожалуйста, введите корректный возраст (больше нуля).");
-    } 
-    else {
-      kittens[index].name = newName;
-      kittens[index].age = newAge;
-      kittens[index].color = newColor;
+  if (isNaN(age) || age <= 0) {
+    displayErrorMessage("Пожалуйста, введите корректный возраст (больше нуля).");
+  } else {
+    const kitten = kittens[index];
+    kitten.name = newName;
+    kitten.age = newAge;
+    kitten.color = newColor;
 
-      displayCollection(kittens, "collection");
-
-      clearErrorMessage();
-      cancelRedact();
+    if (newImage) {
+      const imageUrl = URL.createObjectURL(newImage);
+      kitten.image = imageUrl;
     }
+
+    displayCollection(kittens, "collection");
+
+    clearErrorMessage();
+    cancelRedact();
+  }
 }
 
 function cancelRedact() {
@@ -129,6 +141,7 @@ function deleteKitten(index) {
 
 function startRedact(index) {
   const kitten = kittens[index];
+  document.getElementById("redactImage").src = kitten.image;
   document.getElementById("redactName").value = kitten.name;
   document.getElementById("redactAge").value = kitten.age;
   document.getElementById("redactColor").value = kitten.color;

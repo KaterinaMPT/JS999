@@ -9,9 +9,12 @@
 <body data-bs-theme="dark">
   <div class="container mt-5">
     <h1 class="mb-4">-Ваша коллекция котят-</h1>
-    <div id="collection"></div>
     <h2 class="mt-5">Добавить котенка</h2>
     <form id="dobavl" class="mb-4">
+      <div class="mb-3">
+        <label for="image">Фотография котенка:</label>
+        <input type="file" class="form-control-file" id="image" name="image" accept="image/*">
+      </div>
       <div class="mb-3">
         <label for="name" class="form-label">Имя:</label>
         <input type="text" class="form-control" id="name" name="name" required>
@@ -31,6 +34,10 @@
       <h2>Редактировать котенка</h2>
       <form id="redact">
         <div class="mb-3">
+          <label for="redactImage">Фотография котенка:</label>
+          <input type="file" class="form-control-file" id="redactImage" name="redactImage" accept="image/*">
+        </div>
+        <div class="mb-3">
           <label for="redactName" class="form-label">Имя:</label>
           <input type="text" class="form-control" id="redactName" name="redactName" required>
         </div>
@@ -48,6 +55,7 @@
     </div>
 
     <div id="error-message" class="mt-2 text-danger"></div>
+    <div id="collection" class="row"></div>
   </div>
 
   <script src="JSson.js"></script>
