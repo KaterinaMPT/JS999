@@ -98,12 +98,14 @@ function saveRedact(event) {
       displayErrorMessage("Пожалуйста, введите корректный возраст (больше нуля).");
     } 
     else {
-      const editedKitten = new Kitten(newName, newAge, newColor);
-      kittens.push(editedKitten);
-      form.reset(); 
+      kittens[index].name = newName;
+      kittens[index].age = newAge;
+      kittens[index].color = newColor;
+
       displayCollection(kittens, "collection");
-      
+
       clearErrorMessage();
+      cancelRedact();
     }
 }
 
